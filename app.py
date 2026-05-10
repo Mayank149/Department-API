@@ -4,20 +4,17 @@ import joblib
 import time
 import psycopg2
 import time
+import os
 
 app = FastAPI()
 model = joblib.load("department_model_v1.pkl")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 conn = None
 
 for i in range(5):  # retry 5 times
     try:
-        conn = psycopg2.connect(
-            host="db",
-            database="predictions_db",
-            user="user",
-            password="password"
-        )
+        conn = psycopg2.connect(DATABASE_URL)
         print("Connected to PostgreSQL")
         break
     except Exception as e:
